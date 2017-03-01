@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="js/includes.js"></script>
+    <script src="js/signips.js"></script>
+    <link rel="stylesheet" href="css/signips.css" type="text/css" charset="utf-8" />
+    <title>Timeline</title>
+    <script>
+    var data = {
+        "backgroundImageUrl": "img/PhilipsTimelinev1.png",
+        "fontSrc": "fonts/OpenSans-Regular.ttf",
+        "duration" : 20, //seconds
+        "boxes": [{
+            "smFormat": "facebook",
+            "descText": "Royal Philips on Facebook",
+            "descTime": "10.21AM",
+            "boxContent": "<div class='example'><p>hey you!</p></div>"
+        }, {
+            "smFormat": "facebook",
+            "descText": "Royal Philips on Facebook",
+            "descTime": "10.21AM",
+            "boxContent": "<div class='example'><p>have a nice day</p></div>"
+        }, {
+            "smFormat": "facebook",
+            "descText": "Royal Philips on Facebook",
+            "descTime": "10.21AM",
+            "boxContent": "<div class='example'><p>hey you!</p><p>have a nice week</p></div>"
+        }]
+    }
+
+    var templateInfo = {
+        width: 1360,
+        height: 768,
+        fps: 25,
+        duration: 0,
+        selfTimed: false
+    };
+
+    var playItem, canvasBG, canvasTop, stageBG, stageTop, htmlRoot, screenW, screenH;
+    var debugData = {};
+    var moveDist, intervalDuration;
+
+    function decToHex(dec) {
+        res = dec.toString(16);
+        while (res.length < 6)
+            res = '0' + res;
+        return '#' + res;
+    }
+
+    function hexToRgba(hex, opacity) {
+        hex = hex.replace('#', '');
+        r = parseInt(hex.substring(0, 2), 16);
+        g = parseInt(hex.substring(2, 4), 16);
+        b = parseInt(hex.substring(4, 6), 16);
+        result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+        return result;
+    }
+
+    function pxToEm(element, pixels) {
+        return (Math.ceil(pixels) / parseInt(element.parent().css('font-size'))).toFixed(2) + 'em';
+    }
+
+    function pxToPercents(element, pixels, baseProperty) {
+        return (Math.ceil(pixels) / parseInt(element.parent().css(baseProperty))).toFixed(2) * 100 + '%';
+    }
+
+
+    function setDimensions() {
+        $('#container').css('font-size', ($('#container').height() / 6 + $('#container').width() / 6) + 'px');
+
+    }
+
+    function setAppearance() {
+        $("head").prepend('<style type="text/css">@font-face {font-family: "loadedFont"; src: url("' + data.fontSrc + '");}</style>');
+        $('#container').css({
+            "background-image": "url(" + data.backgroundImageUrl + ")",
+            "font-family": "loadedFont"
+        });
+
+    }
+
+    function setContent() {
+        $("#container .timeline").append("<div class='edge start'></div><div class='line'></div>");
+        for (var i = data.boxes.length - 1; i >= 0; i--) {
+            $("#container .timeline").append("<div class='box box-" + i + "'><div class='desc text'></div><div class='desc time'></div></div>");
+            $("#container .timeline .box-" + i + " .text ").text(data.boxes[i].descText);
+            $("#container .timeline .box-" + i + " .time ").text(data.boxes[i].descTime);
+            $("#container .timeline").append("<div class='line'></div>");
+            $("#container .timeline .box-" + i).append(data.boxes[i].boxContent)
+        }
+        $("#container .timeline").append("<div class='edge finish'></div>");
+    }
+
+    function animate() {
+        intervalDuration = (data.duration / data.boxes.length - 1) *1000;
+        intervalDuration = (intervalDuration > 8000)? intervalDuration : 8000;
+        for (var i = 0; i < data.boxes.length; i++) {
+            setTimeout(function(i) {
+                moveDist = -($('.box-' + i).offset().left) + $('#container').width() / 2 - $('.box-0').width() / 2;
+                console.log(pxToPercents($('.timeline'), parseInt($(".timeline").css('right')) - moveDist, 'width'));
+                $(".timeline").animate({
+                    'right': pxToPercents($('.timeline'), parseInt($(".timeline").css('right')) - moveDist, 'width')
+                }, 1000);
+            }, intervalDuration * i, i);
+        }
+    }
+
+    function init(item, playerData, callbacks) {
+        setContent();
+        setAppearance();
+        setDimensions();
+        $(window).resize(function() {
+            setDimensions();
+        });
+        playItem = item;
+        signips.callbacks = callbacks;
+        screenW = parseInt(playerData.original_width);
+        screenH = parseInt(playerData.original_height);
+        signips.initialize(screenW, screenH);
+        signips.status.initDone();
+    }
+
+    function play() {
+        animate();
+    }
+
+    function pause() {
+        // Pause playback           
+    }
+    </script>
+</head>
+
+<body onload="signips.debugStart();">
+    <div id="container">
+        <div class="timeline"></div>
+    </div>
+</body>
+
+</html>

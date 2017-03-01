@@ -1,0 +1,89 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    position: relative;
+}
+
+#container .timeline {
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#container .timeline .edge {
+    height: 0.05em;
+    width: 0.05em;
+    border: 0.01em solid white;
+    border-radius: 50%;
+}
+
+#container .timeline .line {
+    height: 0.01em;
+    width: 27vw;
+    background-color: white;
+}
+
+#container .timeline .box {
+    height: 33vw;
+    width: 33vw;
+    border-radius: 3%;
+    border: .3em solid white;
+    position: relative;
+    font-size: .05em;
+}
+
+#container .timeline .box .desc {
+    position: absolute;
+    top: 103%;
+    font-size: 1.7vw;
+    color: white;
+}
+
+#container .timeline .box .text {
+    left: 0;
+}
+
+#container .timeline .box .time {
+    right: 0;
+}
+
+
+/*#container .timeline .landscape-line {
+    width: 27vw;
+}
+
+#container .timeline .portrait-line {
+    width: 15vw;
+}
+
+#container .timeline .landscape-box {
+    height: 33vw;
+    width: 33vw;
+}
+
+#container .timeline .portrait-box {
+    height: 65vw;
+    width: 65vw;
+}*/
